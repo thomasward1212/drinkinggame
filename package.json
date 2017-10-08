@@ -7,5 +7,16 @@
     "test": "testy"
   },
   "author": "Tom Ward",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.1",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^4.3.1",
+    "gulp-webpack-typescript-pipeline": "^7.2.3",
+    "tslint-config-standard": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "eslint-config-defaults": "^9.0.0"
+  }
 }
