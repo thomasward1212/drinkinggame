@@ -1,0 +1,11 @@
+{
+  "name": "drinkinggame",
+  "version": "0.0.1",
+  "description": "Online drinking game",
+  "main": "index.ts",
+  "scripts": {
+    "test": "testy"
+  },
+  "author": "Tom Ward",
+  "license": "ISC"
+}
