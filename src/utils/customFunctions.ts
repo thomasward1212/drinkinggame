@@ -88,25 +88,78 @@ const startTheActualGame = () => {
 const nextQuestion = (players, lastPlayer) => {
 	const numberOfQuestions = questions.length;
 	const currentQuestion = questions[Math.floor(Math.random() * numberOfQuestions)];
-
-	const cardElement = document.createElement('div') as HTMLElement;
-	cardElement.className = 'col-lg-12 text-center card';
-	cardElement.innerHTML = `
+	const pLeadElement = document.querySelector('p.lead') as HTMLElement;
+	pLeadElement.innerText = `${lastPlayer}! It's your turn`;
+	const existingCardElement = document.querySelector('.card');
+	if (existingCardElement) {
+		existingCardElement.innerHTML = `
+		<div class="card-block">
+		<h4 class="card-title">${currentQuestion.question}</h4>
+		<hr>
+		<p class="card-text">Time Limit: ${currentQuestion['time-limit']}</p>
+		<p class="card-text"> Points: ${currentQuestion.points} </p>
+		<p class="card-text"> Category: ${currentQuestion.category}</p>
+	  </div>
+		`;
+	} else {
+		const cardElement = document.createElement('div') as HTMLElement;
+		cardElement.className = 'col-lg-12 text-center card';
+		cardElement.innerHTML = `
 	<div class="card-block">
 	<h4 class="card-title">${currentQuestion.question}</h4>
 	<hr>
 	<p class="card-text">Time Limit: ${currentQuestion['time-limit']}</p>
 	<p class="card-text"> Points: ${currentQuestion.points} </p>
 	<p class="card-text"> Category: ${currentQuestion.category}</p>
-	<hr>
   </div>
 	`;
 
-	const containerRowElement = document.querySelector('.container .row') as HTMLElement;
-	containerRowElement.appendChild(cardElement);
+		const passOrFailButtonsElement = document.createElement('div') as HTMLElement;
+		passOrFailButtonsElement.className = 'col-lg-12 text-center passorfail';
+		passOrFailButtonsElement.innerHTML =
+			`</br>
+	<button type="button" class="btn btn-success passBtn">Pass</button>
+	<button type="button" class="btn btn-danger failBtn">Fail</button>`;
+
+		const containerRowElement = document.querySelector('.container .row') as HTMLElement;
+		containerRowElement.appendChild(cardElement);
+		containerRowElement.appendChild(passOrFailButtonsElement);
+
+		const failBtn = document.querySelector('.failBtn') as HTMLElement;
+		const passBtn = document.querySelector('.passBtn') as HTMLElement;
+
+		failBtn.addEventListener('click', () => {
+			const currentPlayersIndex = players.indexOf(lastPlayer);
+			if (currentPlayersIndex === players.length - 1) { // Last player so go back to the first.
+				lastPlayer = players[0];
+			} else {
+				lastPlayer = players[currentPlayersIndex + 1]; // Last player is now the next person in the array.
+			}
+			failedQuestion(players, lastPlayer);
+		}, false);
+
+		passBtn.addEventListener('click', () => {
+			const currentPlayersIndex = players.indexOf(lastPlayer);
+			if (currentPlayersIndex === players.length - 1) { // Last player so go back to the first.
+				lastPlayer = players[0];
+			} else {
+				lastPlayer = players[currentPlayersIndex + 1]; // Last player is now the next person in the array.
+			}
+			completedQuestion(players, lastPlayer);
+		}, false);
+	}
+};
+
+const failedQuestion = (players, lastPlayer) => {
+	nextQuestion(players, lastPlayer);
+};
+
+const completedQuestion = (players, lastPlayer) => {
+	nextQuestion(players, lastPlayer);
 };
 
 export {
 	plusMinusNumberOfPlayers,
-	continueToNameEntry
+	continueToNameEntry,
+	nextQuestion
 };

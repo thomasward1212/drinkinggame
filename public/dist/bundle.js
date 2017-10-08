@@ -168,11 +168,53 @@ var startTheActualGame = function () {
 var nextQuestion = function (players, lastPlayer) {
     var numberOfQuestions = questions_1.questions.length;
     var currentQuestion = questions_1.questions[Math.floor(Math.random() * numberOfQuestions)];
-    var cardElement = document.createElement('div');
-    cardElement.className = 'col-lg-12 text-center card';
-    cardElement.innerHTML = "\n\t<div class=\"card-block\">\n\t<h4 class=\"card-title\">" + currentQuestion.question + "</h4>\n\t<hr>\n\t<p class=\"card-text\">Time Limit: " + currentQuestion['time-limit'] + "</p>\n\t<p class=\"card-text\"> Points: " + currentQuestion.points + " </p>\n\t<p class=\"card-text\"> Category: " + currentQuestion.category + "</p>\n\t<hr>\n  </div>\n\t";
-    var containerRowElement = document.querySelector('.container .row');
-    containerRowElement.appendChild(cardElement);
+    var pLeadElement = document.querySelector('p.lead');
+    pLeadElement.innerText = lastPlayer + "! It's your turn";
+    var existingCardElement = document.querySelector('.card');
+    if (existingCardElement) {
+        existingCardElement.innerHTML = "\n\t\t<div class=\"card-block\">\n\t\t<h4 class=\"card-title\">" + currentQuestion.question + "</h4>\n\t\t<hr>\n\t\t<p class=\"card-text\">Time Limit: " + currentQuestion['time-limit'] + "</p>\n\t\t<p class=\"card-text\"> Points: " + currentQuestion.points + " </p>\n\t\t<p class=\"card-text\"> Category: " + currentQuestion.category + "</p>\n\t  </div>\n\t\t";
+    }
+    else {
+        var cardElement = document.createElement('div');
+        cardElement.className = 'col-lg-12 text-center card';
+        cardElement.innerHTML = "\n\t<div class=\"card-block\">\n\t<h4 class=\"card-title\">" + currentQuestion.question + "</h4>\n\t<hr>\n\t<p class=\"card-text\">Time Limit: " + currentQuestion['time-limit'] + "</p>\n\t<p class=\"card-text\"> Points: " + currentQuestion.points + " </p>\n\t<p class=\"card-text\"> Category: " + currentQuestion.category + "</p>\n  </div>\n\t";
+        var passOrFailButtonsElement = document.createElement('div');
+        passOrFailButtonsElement.className = 'col-lg-12 text-center passorfail';
+        passOrFailButtonsElement.innerHTML =
+            "</br>\n\t<button type=\"button\" class=\"btn btn-success passBtn\">Pass</button>\n\t<button type=\"button\" class=\"btn btn-danger failBtn\">Fail</button>";
+        var containerRowElement = document.querySelector('.container .row');
+        containerRowElement.appendChild(cardElement);
+        containerRowElement.appendChild(passOrFailButtonsElement);
+        var failBtn = document.querySelector('.failBtn');
+        var passBtn = document.querySelector('.passBtn');
+        failBtn.addEventListener('click', function () {
+            var currentPlayersIndex = players.indexOf(lastPlayer);
+            if (currentPlayersIndex === players.length - 1) {
+                lastPlayer = players[0];
+            }
+            else {
+                lastPlayer = players[currentPlayersIndex + 1]; // Last player is now the next person in the array.
+            }
+            failedQuestion(players, lastPlayer);
+        }, false);
+        passBtn.addEventListener('click', function () {
+            var currentPlayersIndex = players.indexOf(lastPlayer);
+            if (currentPlayersIndex === players.length - 1) {
+                lastPlayer = players[0];
+            }
+            else {
+                lastPlayer = players[currentPlayersIndex + 1]; // Last player is now the next person in the array.
+            }
+            completedQuestion(players, lastPlayer);
+        }, false);
+    }
+};
+exports.nextQuestion = nextQuestion;
+var failedQuestion = function (players, lastPlayer) {
+    nextQuestion(players, lastPlayer);
+};
+var completedQuestion = function (players, lastPlayer) {
+    nextQuestion(players, lastPlayer);
 };
 
 
